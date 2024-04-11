@@ -21,7 +21,7 @@ pipeline {
     stage('Build Node JS Docker Image') {
             steps {
                 script {
-                    sh 'docker login -u range4056 -p ${range4056docker}'
+                    sh 'docker build -t  range4056/user-management-app-1.0'
             }
         }
     }
