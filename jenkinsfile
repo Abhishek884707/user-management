@@ -13,33 +13,29 @@ pipeline {
         }
      
     stage('Node JS Build') {
-      steps {
-        sh 'npm install'
-      }
-    }
-  
-     stage('Build Node JS Docker Image') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: 'DOCKER_CREDENTIALS', toolName: 'docker') {
-                      sh 'docker build -t range4056/user-management-app-1.0.0 .'
-                    }
-                }
+              sh 'npm install'
             }
-        }
-
-
-        stage('Deploy Docker Image to DockerHub') {
+       }
+  
+    stage('Build Node JS Docker Image') {
             steps {
                 script {
-                 withDockerRegistry(credentialsId: 'DOCKER_CREDENTIALS', toolName: 'docker') {
                     sh 'docker login -u range4056 -p ${range4056docker}'
             }
-            sh 'docker push range4056/user-management-app-1.0'
         }
-            }   
-        }
-         
+    }
 
+
+    stage('Deploy Docker Image to DockerHub') {
+            steps {
+                script {
+                 withCredentials([string(credentialsId: 'range4056docker', variable: 'range4056docker')]) {
+                    sh 'docker login -u range4056 -p ${range4056docker}'
+                }
+            sh 'docker push range4056/user-management-app-1.0'
+           }
+         }   
+      }
   }
 }
